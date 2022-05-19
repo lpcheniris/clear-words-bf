@@ -8,7 +8,7 @@ async function fetch(...args) {
     return fetch(...args);
 }
 
-const parseParams = (uri: string, params: object) => {
+const parseParamsToUrl = (uri: string, params: object) => {
     const paramsArray: String[] = []
     Object.keys(params).forEach(key => params[key] && paramsArray.push(`${key}=${params[key]}`))
     if (uri.search(/\?/) === -1) {
@@ -25,19 +25,22 @@ function truncate(q: string) {
     return q.substring(0, 10) + len + q.substring(len - 10, len);
 }
 
-export default async function translateWords(query: string) {
+function getSign(query) {
     const APP_KEY = '7d27cdf0d4d07141';
-    const KEY = 'n8OA7HPkgPN1ArlK7usl1B2ZtmqsO8dP';
+    const KEY = 'n8OA7HPkgPN1ArlK7usl1B2ZtmqsO8dP'; 
     let salt = (new Date).getTime();
     let curtime = Math.round(new Date().getTime() / 1000);
+    let str1 = APP_KEY + truncate(query) + salt + curtime + KEY;
+    let sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex);
+    return {APP_KEY, KEY, salt, curtime, sign}
+
+}
+export async function translateWords(query: string) {
     // 多个query可以用\n连接  如 query='apple\norange\nbanana\npear'
     let from = 'en';
     let to = 'zh-CHS';
-    let str1 = APP_KEY + truncate(query) + salt + curtime + KEY;
     let vocabId = '您的用户词表ID';
-
-    let sign = CryptoJS.SHA256(str1).toString(CryptoJS.enc.Hex);
-
+    const {APP_KEY, salt, curtime, sign} = getSign(query)
     let requestData = {
         q: query,
         appKey: APP_KEY,
@@ -49,7 +52,7 @@ export default async function translateWords(query: string) {
         curtime: curtime,
         vocabId: vocabId,
     }
-    const response = await fetch(parseParams('https://openapi.youdao.com/api', requestData))
+    const response = await fetch(parseParamsToUrl('https://openapi.youdao.com/api', requestData))
 
     return await response.json();
 }
