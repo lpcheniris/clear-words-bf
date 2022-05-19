@@ -11,7 +11,10 @@ WordController.post('/', async (req: Request, res: Response, next: NextFunction)
     try {
         let isExist = await Word.exists({ query: data.query })
         if (!isExist) {
-            result = await new Word(data).save()
+            await new Word(data).save()
+            result = {
+                text: "This word is saved"
+            }
         } else {
           result = {
               text: "This word is exist"
