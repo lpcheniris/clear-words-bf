@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 function setupMongo(): void {
-  const mongoDB = "mongodb://localhost:27018/clearwords";
+  const mongoDB = "mongodb://localhost:27016/clearwords";
 
 
   mongoose.connect(mongoDB, { useNewUrlParser: true });

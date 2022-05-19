@@ -1,0 +1,1 @@
+mongod --dbpath ~/mongodbData/clearwords --port 27016
