@@ -43,3 +43,12 @@ WordController.delete('/:query', async (req: Request, res: Response, next: NextF
         next(e);
     }
 });
+
+WordController.get('/', async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const result = await Word.find().exec()
+        res.status(200).send( result );
+    } catch (e) {
+        next(e);
+    }
+});
