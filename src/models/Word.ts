@@ -9,7 +9,7 @@ const WordSchema = new mongoose.Schema({
     enTozh: { type: Boolean, require: true, default: false},
     zhToen: { type: Boolean, require: true, default: false},
     voiceToen: { type: Boolean, require: true, default: false},
-    isRember: { type: Boolean, require: true, default: false},
+    isRemember: { type: Boolean, require: true, default: false},
 })
 
 export const Word = mongoose.model("Word", WordSchema)
